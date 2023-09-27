@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">demo</string>
+    <string name="input_to_numberPhone">Nhập số điện thoại tại đây</string>
+    <string name="btn_authentic">Xác thực</string>
+    <string name="phoneNumber">Số điện thoại:</string>
+    <string name="or_send_otp">Hoặc gửi mã OTP</string>
+    <string name="voice_otp">Voice OTP</string>
+    <string name="code_otp">Mã OTP:</string>
+    <string name="input_code_OTP">Nhập Mã OTP:</string>
+    <string name="fail">THẤT BẠI</string>
+    <string name="success">THÀNH CÔNG </string>
+    <string name="notify_success_phone_number">Bạn đã xác thực thành công với số điện thoại :</string>
+    <string name="notify_fail">Xác minh số điện thoại thất bại</string>
+    <string name="notification_channel_id" translatable="false">fcm_default_channel</string>
+</resources>
