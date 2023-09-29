@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
     EditText edit_PhoneNumber, edit_Countries;
     Button btnAuthentic, btnVoiceOTP;
-
-
+    ProgressBar progressBar;
+    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         edit_Countries = findViewById(R.id.edit_countries);
         btnAuthentic = findViewById(R.id.btnAuthentic);
         btnVoiceOTP = findViewById(R.id.btnVoiceOTP);
+        progressBar = (ProgressBar) findViewById(R.id.progress_circular);
     }
 
 
@@ -76,7 +79,15 @@ public class MainActivity extends AppCompatActivity {
         btnAuthentic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callIPFlow();
+                progressBar.setVisibility(View.VISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        callIPFlow();
+                    }
+                }, 300);
+
             }
         });
         CountryPicker.Builder builder = new CountryPicker.Builder().with(this)

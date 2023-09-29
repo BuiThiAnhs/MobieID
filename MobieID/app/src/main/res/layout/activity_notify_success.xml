@@ -4,6 +4,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/success"
-        android:textSize="28dp"
+        android:textSize="24dp"
         android:textColor="@color/success"
         android:textStyle="bold"/>
 
@@ -20,16 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textSize="28dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:layout_marginLeft="-13dp"
             android:text="@string/notify_success_phone_number"
-            android:textAlignment="center"
-            android:textSize="14dp"
+            android:textAlignment="textEnd"
+            android:textSize="13dp"
+            android:paddingTop="@dimen/margin_16"
             android:textStyle="italic" />
 
         <TextView

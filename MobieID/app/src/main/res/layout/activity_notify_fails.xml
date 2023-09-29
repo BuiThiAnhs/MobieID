@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
     tools:context=".activity.Notify_Fails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -20,12 +22,14 @@
         tools:ignore="SpUsage" />
 
     <TextView
+
         android:id="@+id/txtinput_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/notify_fail"
         android:textSize="16dp"
+
         android:textStyle="italic"
         tools:ignore="SpUsage,TextSizeCheck" />
 

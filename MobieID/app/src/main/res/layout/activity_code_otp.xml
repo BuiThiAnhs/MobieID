@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
     android:layout_centerHorizontal="false"
     tools:context=".activity.CodeOTP">
 
@@ -18,7 +20,7 @@
         android:contentDescription="TODO" />
 
 
-    <EditText
+    <com.ITS.mobieid.custom_text.RobotoLightEditText
         android:id="@+id/edit_codeotp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

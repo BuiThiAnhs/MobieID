@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:paddingRight="@dimen/margin_16"
+    android:paddingLeft="@dimen/margin_16"
     android:layout_centerHorizontal="false"
     tools:context=".activity.MainActivity">
 
@@ -17,26 +19,25 @@
         tools:ignore="ContentDescription,HardcodedText,ImageContrastCheck"
         android:contentDescription="TODO" />
 
-    <TextView
+    <com.ITS.mobieid.custom_text.RobotoBoldTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/phoneNumber"
-        android:textSize="22dp"
-        android:fontFamily="@font/inter"
+        android:textSize="26dp"
         android:textStyle="bold"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
+        <com.ITS.mobieid.custom_text.RobotoLightEditText
             android:id="@+id/edit_countries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:width="50dp"
             android:ems="10"
             android:inputType="text"
+            android:textSize="24dp"
             android:maxWidth="80dp"
             android:minWidth="50dp"
             android:minHeight="48dp"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.ITS.mobieid.custom_text.RobotoLightEditText
             android:id="@+id/edit_phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +56,8 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/input_to_numberPhone"
-            android:inputType="text"
+            android:inputType="number"
+            android:textSize="24dp"
             android:maxWidth="350dp"
             android:minWidth="350dp"
             android:minHeight="48dp"
@@ -70,8 +72,13 @@
         android:backgroundTint="@color/button"
         android:text="@string/btn_authentic"
         android:textColor="@color/white" />
-
-    <TextView
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:visibility="invisible"/>
+    <com.ITS.mobieid.custom_text.RobotoBoldTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/or_send_otp"
@@ -87,6 +94,7 @@
         android:backgroundTint="@color/white"
         android:textColor="@color/button"
         android:text="@string/voice_otp" />
+
 
 
 </LinearLayout>
