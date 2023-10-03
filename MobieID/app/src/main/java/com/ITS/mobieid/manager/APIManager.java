@@ -9,7 +9,8 @@ import com.ITS.mobieid.Constant;
 import com.ITS.mobieid.callback.OTPCallback;
 import com.ITS.mobieid.callback.TokenCallback;
 import com.ITS.mobieid.util.Util;
-import com.ipification.mobile.sdk.android.IPConfiguration;
+import com.its.mobileid.MobileID;
+
 
 import org.jetbrains.annotations.NotNull;
 
@@ -123,7 +124,7 @@ public class APIManager {
         try {
             String url = Constant.ACCESS_TOKEN_URL;
             RequestBody body = new FormBody.Builder()
-                    .add("api_key", IPConfiguration.getInstance().getCLIENT_ID())
+//                    .add("api_key", MobileID.getInstance().getCLIENT_ID())
                     .build();
             OkHttpClient client = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url(url).post(body).build();

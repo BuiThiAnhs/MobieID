@@ -31,24 +31,6 @@
         android:orientation="horizontal">
 
         <com.ITS.mobieid.custom_text.RobotoLightEditText
-            android:id="@+id/edit_countries"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="50dp"
-            android:ems="10"
-            android:inputType="text"
-            android:textSize="24dp"
-            android:maxWidth="80dp"
-            android:minWidth="50dp"
-            android:minHeight="48dp"
-            android:text="+84" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <com.ITS.mobieid.custom_text.RobotoLightEditText
             android:id="@+id/edit_phoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
