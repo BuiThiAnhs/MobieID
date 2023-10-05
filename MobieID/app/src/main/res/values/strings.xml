@@ -4,7 +4,7 @@
     <string name="btn_authentic">Xác thực</string>
     <string name="phoneNumber">Số điện thoại:</string>
     <string name="or_send_otp">Hoặc gửi mã OTP</string>
-    <string name="voice_otp">Voice OTP</string>
+    <string name="sms_otp">Gửi Mã</string>
     <string name="code_otp">Mã OTP:</string>
     <string name="input_code_OTP">Nhập Mã OTP:</string>
     <string name="fail">THẤT BẠI</string>

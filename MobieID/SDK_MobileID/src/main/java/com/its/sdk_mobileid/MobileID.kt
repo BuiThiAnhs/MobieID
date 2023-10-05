@@ -3,6 +3,7 @@ package com.its.mobileid
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.ipification.mobile.sdk.android.IPConfiguration
 import com.ipification.mobile.sdk.android.IPEnvironment
@@ -58,7 +59,7 @@ class MobileID {
             phoneNumber: String,
             callback: MobileIDCallback<MobileIDCoverageResponse>
         ) {
-
+            Log.d("MyApp", "phoneNumber: $phoneNumber")
             val coverageCallback = object : CellularCallback<CoverageResponse>
             {
                 override fun onSuccess(response: CoverageResponse) {
@@ -87,9 +88,9 @@ class MobileID {
             callback: MobileIDCallback<MobileIDAuthResponse>
         ) {
             // process phone number
-            //val formattedPhoneNumber = formatPhoneNumberWithCountryCode(phoneNumber, "VN")
-            val formattedPhoneNumber = phoneNumber
-
+           val formattedPhoneNumber = formatPhoneNumberWithCountryCode(phoneNumber, "VN")
+//            val formattedPhoneNumber = phoneNumber
+            Log.d("startAuthenticate.kt", "startAuthenticate: " +formattedPhoneNumber);
             val authRequestBuilder = AuthRequest.Builder()
             authRequestBuilder.setScope("openid ip:phone_verify")
             authRequestBuilder.addQueryParam("login_hint", formattedPhoneNumber)

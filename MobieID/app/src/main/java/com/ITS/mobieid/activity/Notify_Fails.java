@@ -40,7 +40,7 @@ public class Notify_Fails extends AppCompatActivity {
     }
     private void init()
     {
-        btn_VoiceOTP = findViewById(R.id.btn_VoiceOTP);
+        btn_VoiceOTP = findViewById(R.id.btn_SMSOTP);
         txt_error = findViewById(R.id.txtinput_error);
     }
     private void openOTP(String sms) {

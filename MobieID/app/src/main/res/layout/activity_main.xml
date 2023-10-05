@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white"
     android:paddingRight="@dimen/margin_16"
     android:paddingLeft="@dimen/margin_16"
     android:layout_centerHorizontal="false"
@@ -75,7 +76,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
         android:textColor="@color/button"
-        android:text="@string/voice_otp" />
+        android:text="@string/sms_otp" />
 
 
 

@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 public class CallService extends Service {
     private static final String TAG = "CallService";
-    private CallReceiver callReceiver;
+    private OTPReceiver callReceiver;
     private TelephonyManager telephonyManager;
     private PhoneStateListener callStateListener;
 

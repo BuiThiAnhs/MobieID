@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white"
     android:layout_gravity="center"
     android:paddingRight="@dimen/margin_16"
     android:paddingLeft="@dimen/margin_16"
@@ -44,11 +45,11 @@
         tools:ignore="ContentDescription" />
 
     <Button
-        android:id="@+id/btn_VoiceOTP"
+        android:id="@+id/btn_SMSOTP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:backgroundTint="@color/button"
-        android:text="@string/voice_otp"
+        android:text="@string/sms_otp"
         tools:ignore="TextContrastCheck,VisualLintButtonSize" />
 </LinearLayout>

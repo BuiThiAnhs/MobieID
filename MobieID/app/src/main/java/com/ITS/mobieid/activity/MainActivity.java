@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initWidget();
         initView();
-        initIPification();
+        initMobileID();
 
         btnVoiceOTP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void initIPification() {
-        MobileID.Factory.setEnv(MobileIDEnv.SANDBOX,"60e8291b368fbf97f80fd055","com.example.demo://path/" );
+    private void initMobileID() {
+        MobileID.Factory.setEnv(MobileIDEnv.PRODUCTION,"60e8291b368fbf97f80fd055","com.example.demo://path/" );
 //        IPConfiguration.getInstance().setCustomUrls(true);
 //        IPConfiguration.getInstance().setAUTHORIZATION_URL(Uri.parse("https://api.smartbot.vn/stage/auth/start"));
 //        IPConfiguration.getInstance().setCOVERAGE_URL(Uri.parse("https://api.smartbot.vn/stage/coverage"));
@@ -162,12 +162,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startAuth() {
+        String user_input_phone_number = edit_PhoneNumber.getText().toString();
+        String phoneNumbers ="";
+        if (user_input_phone_number.startsWith("0")) {
+            phoneNumbers = "+84" + user_input_phone_number.substring(1);
+        }
+        Log.d(TAG, "startAuth:  " +phoneNumbers);
         MobileIDCallback callback = new MobileIDCallback<MobileIDAuthResponse>() {
             @Override
             public void onSuccess(MobileIDAuthResponse response) {
                 Log.d(TAG, "//////onSuccess: AuthResponse" + response.getCode());
-//                String country_code = edit_Countries.getText().toString();
                 String phoneNumber = edit_PhoneNumber.getText().toString();
+
                 if (response.getCode() != null) {
                     Log.d(TAG, "onSuccess:  getcode" + response.getCode().toString());
                     callTokenExchange(response.getCode());
@@ -185,17 +191,21 @@ public class MainActivity extends AppCompatActivity {
 
         AuthRequest.Builder authRequestBuilder = new AuthRequest.Builder();
 //        String country_code = edit_Countries.getText().toString();
-        String user_input_phone_number = edit_PhoneNumber.getText().toString();
-        authRequestBuilder.addQueryParam("login_hint", user_input_phone_number);
+        authRequestBuilder.addQueryParam("login_hint", phoneNumbers);
         authRequestBuilder.setScope("openid ip:phone_verify");
-        MobileID.Factory.startAuthenticate(this, user_input_phone_number, callback);
-        Log.d(TAG, "startAuth: " + user_input_phone_number);
+        MobileID.Factory.startAuthenticate(this, phoneNumbers, callback);
+        Log.d(TAG, "startAuths: " + phoneNumbers);
     }
 
     private void callCheckCoverage(CoverageCallback coverageCallback) {
 //        String country_code = edit_Countries.getText().toString();
         String user_input_phone_number = edit_PhoneNumber.getText().toString();
-        MobileID.Factory.startCheckCoverage(this, user_input_phone_number, new MobileIDCallback<MobileIDCoverageResponse>() {
+        String phoneNumbers ="";
+        if (user_input_phone_number.startsWith("0")) {
+            phoneNumbers = "84" + user_input_phone_number.substring(1);
+        }
+        Log.d(TAG, "callCheckCoverage: log sdt" + phoneNumbers);
+        MobileID.Factory.startCheckCoverage(MainActivity.this, phoneNumbers, new MobileIDCallback<MobileIDCoverageResponse>() {
            @Override
            public void onError(@NonNull MobileIDError error) {
                Log.e(TAG, "Check Error: " + error.getErrorMessage());
@@ -207,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                Log.d(TAG, "onSuccess: CoverageResponse coverageResponse" + response);
                if (response.isAvailable()) {
                    coverageCallback.result(true, response.getOperatorCode(), "");
-                   Log.d(TAG, "onSuccess:  true");
+                   Log.d(TAG, "onSuccess:  true"+response.getOperatorCode().toString());
                } else {
                    coverageCallback.result(false, response.getOperatorCode(), "");
                    Log.e(TAG, "CheckCoverage Failed: Not supported");
@@ -217,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d(TAG, "callCheckCoverage: ");
     }
-
+//0382854418
     private void callTokenExchange(String code) {
         APIManager.doPostToken(code, ((response, errorMessage) -> {
             if (!response.equals("")) {
