@@ -26,7 +26,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class APIManager {
-    private final static String TAG = "ApiManager";
+    private final static String TAG = "Phone Verifi";
     private final static String currentState = null;
     public static String currentToken = null;
 
@@ -38,12 +38,11 @@ public class APIManager {
                     .build();
             OkHttpClient client = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url(url).post(body).build();
-            Log.d(TAG, "doPostToken:  " + body.toString());
+
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.d(TAG, "onFailure: " + e.getMessage());
                     callback.result("", e.getMessage());
                 }
 
@@ -51,10 +50,11 @@ public class APIManager {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful() && response.body() != null) {
                         String accessToken = Util.parseAccessTokenFromJSON(response.body().string());
-                        Log.d(TAG, "onResponse: accessToken" + accessToken);
-                        Log.e(TAG, "onResponse: accessToken: "+ accessToken );
+                        Log.d(TAG, "onResponse: accessToken: "+ accessToken );
                         if (!accessToken.equals("")) {
                             doVerify(accessToken, code, callback);
+
+
                         } else {
                             callback.result("", response.body().string());
                         }
@@ -95,13 +95,15 @@ public class APIManager {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (response.isSuccessful() && response.body() != null) {
                         String responseBody = response.body().string(); // Đọc dữ liệu từ Response
-                        Log.d(TAG, "onResponse: " + responseBody);
                         callback.result(responseBody, "");
+                        Log.d(TAG, "onResponse: " +responseBody);
                     } else {
+                        Log.d(TAG, "onResponse: " + response.body().string());
                         try {
                             if (response.body() != null) {
                                 String errorBody = response.body().string(); // Đọc dữ liệu từ Response khi xảy ra lỗi
                                 callback.result("", errorBody);
+
                             } else {
                                 callback.result("", "error body is null " + response.code());
                             }

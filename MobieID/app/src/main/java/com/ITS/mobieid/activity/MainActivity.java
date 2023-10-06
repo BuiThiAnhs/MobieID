@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,30 +114,25 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Notify_Fails.class);
         intent.putExtra("error", error);
         startActivity(intent);
+        Toast.makeText(this, "Xác thực thất bại.", Toast.LENGTH_SHORT).show();
     }
 
     private void openSuccessActivity(String phonenumber) {
         Intent intent = new Intent(this, Notify_Success.class);
         intent.putExtra("success", phonenumber);
         startActivity(intent);
-        Log.d(TAG, "openSuccessActivity:");
+        Toast.makeText(this, "Xác thực thành công.", Toast.LENGTH_SHORT).show();
     }
     private void openOTP(String OTP) {
         Intent intent = new Intent(this, CodeOTP.class);
+
         intent.putExtra("OTP", OTP);
         startActivity(intent);
+        Toast.makeText(this, "Đang chuyển sang SMS OTP ...", Toast.LENGTH_SHORT).show();
     }
 
     private void initMobileID() {
         MobileID.Factory.setEnv(MobileIDEnv.PRODUCTION,"60e8291b368fbf97f80fd055","com.example.demo://path/" );
-
-//        IPConfiguration.getInstance().setCustomUrls(true);
-//        IPConfiguration.getInstance().setAUTHORIZATION_URL(Uri.parse("https://api.smartbot.vn/stage/auth/start"));
-//        IPConfiguration.getInstance().setCOVERAGE_URL(Uri.parse("https://api.smartbot.vn/stage/coverage"));
-//        IPConfiguration.getInstance().setENV(IPEnvironment.SANDBOX);
-//        IPConfiguration.getInstance().setCLIENT_ID("60e8291b368fbf97f80fd055");
-////        IPConfiguration.getInstance().setCLIENT_SETCRET("maitrongjthuaanf");
-//        IPConfiguration.getInstance().setREDIRECT_URI(Uri.parse("com.example.demo://path/"));
 
     }
 
@@ -177,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onError(@NonNull MobileIDError error) {
                   String phoneNumber = edit_PhoneNumber.getText().toString();
-                  Log.d(TAG, "onError:  false" + error.getErrorMessage()) ;
+                  Log.d(TAG, "onError:  false" + error.getErrorMessage().toString()) ;
                   openFailActivity(phoneNumber);
               }
 
@@ -195,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private void callCheckCoverage(CoverageCallback coverageCallback) {
 //        String country_code = edit_Countries.getText().toString();
         String user_input_phone_number = edit_PhoneNumber.getText().toString();
-        String phoneNumbers =null;
+        String phoneNumbers ="";
         if (user_input_phone_number.startsWith("0")) {
             phoneNumbers = "84" + user_input_phone_number.substring(1);
         }
@@ -208,11 +204,10 @@ public class MainActivity extends AppCompatActivity {
            }
 
            @Override
-           public void onSuccess(MobileIDCoverageResponse response) {
-               Log.d(TAG, "onSuccess: CoverageResponse coverageResponse" + response);
+           public void onSuccess(MobileIDCoverageResponse response) {Log.d(TAG, "onSuccess: CoverageResponse coverageResponse" + response);
                if (response.isAvailable()) {
                    coverageCallback.result(true, response.getOperatorCode(), "");
-                   Log.d(TAG, "onSuccess:  true"+response.getOperatorCode().toString());
+                   Log.d(TAG, "onSuccess:  true"+response.getOperatorCode());
                } else {
                    coverageCallback.result(false, response.getOperatorCode(), "");
                    Log.e(TAG, "CheckCoverage Failed: Not supported");

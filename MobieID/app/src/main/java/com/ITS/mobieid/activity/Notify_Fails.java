@@ -27,7 +27,6 @@ public class Notify_Fails extends AppCompatActivity {
         Intent intent= getIntent();
         if (intent != null) {
             data = intent.getStringExtra("error");
-            Log.d(TAG, "onCreate: "+  data);
         }
         String finalData = data;
         btn_VoiceOTP.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +46,7 @@ public class Notify_Fails extends AppCompatActivity {
         //activity
         Intent intent = new Intent(this, CodeOTP.class);
         intent.putExtra("sms", sms);
-        Toast.makeText(this, "Đang chuyển sang voiceOTP.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Đang chuyển sang SMS OTP ...", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
     private void openService()

@@ -60,7 +60,6 @@ public class CodeOTP extends AppCompatActivity {
             data = intent.getStringExtra("sms");
 
         }
-        Log.d(TAG, "initData: "+ data);
     }
     private void initView()
     {
@@ -71,13 +70,13 @@ public class CodeOTP extends AppCompatActivity {
 
             }
         });
-        Log.d(TAG, "initView:  start");
+
     }
 
     private void openSuccessActivity() {
         Intent intent = new Intent(this, Notify_Success.class);
         startActivity(intent);
-        Log.d(TAG, "openSuccessActivity:");
+
     }
 
 

@@ -18,7 +18,6 @@ public class CallService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "Service started");
         telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         callStateListener = new PhoneStateListener() {
             @Override
@@ -26,7 +25,7 @@ public class CallService extends Service {
                 // Xử lý trạng thái cuộc gọi ở đây
                 switch (state) {
                     case TelephonyManager.CALL_STATE_RINGING:
-                        Log.d(TAG, "onCallStateChanged: ");
+
                         break;
                     case TelephonyManager.CALL_STATE_OFFHOOK:
                         // Đang trong cuộc gọi
@@ -43,7 +42,7 @@ public class CallService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Service stopped");
+
         telephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_NONE);
     }
     @Nullable
