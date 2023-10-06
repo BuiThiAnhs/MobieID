@@ -9,6 +9,7 @@ import com.ITS.mobieid.Constant;
 import com.ITS.mobieid.callback.OTPCallback;
 import com.ITS.mobieid.callback.TokenCallback;
 import com.ITS.mobieid.util.Util;
+import com.ipification.mobile.sdk.android.IPConfiguration;
 import com.its.mobileid.MobileID;
 
 
@@ -33,15 +34,16 @@ public class APIManager {
         try {
             String url = Constant.ACCESS_TOKEN_URL;
             RequestBody body = new FormBody.Builder()
-//                    .add("api_key", IPConfiguration.getInstance().getCLIENT_ID())
                     .add("api_key", "maitrongjthuaanf")
                     .build();
             OkHttpClient client = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url(url).post(body).build();
+            Log.d(TAG, "doPostToken:  " + body.toString());
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Log.d(TAG, "onFailure: " + e.getMessage());
                     callback.result("", e.getMessage());
                 }
 
@@ -49,6 +51,7 @@ public class APIManager {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful() && response.body() != null) {
                         String accessToken = Util.parseAccessTokenFromJSON(response.body().string());
+                        Log.d(TAG, "onResponse: accessToken" + accessToken);
                         Log.e(TAG, "onResponse: accessToken: "+ accessToken );
                         if (!accessToken.equals("")) {
                             doVerify(accessToken, code, callback);
@@ -165,45 +168,5 @@ public class APIManager {
         }
     }
 
-    public  void doCallVoiceOTP(String phoneNumber, String otp,final OTPCallback callback)
-    {
-        try {
-            // Tạo yêu cầu gửi cuộc gọi voice OTP
-            String url = Constant.VOICE_OTP;
-            RequestBody requestBody = new FormBody.Builder().add("otp", otp).build();
-            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-            Request request = new Request.Builder().url(url).post(requestBody).addHeader("Authorization", "Bearer " + phoneNumber)
-                    .build();
-            Call call = okHttpClient.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
 
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String responseBody = response.body().string(); // Đọc dữ liệu từ Response
-                        Log.d(TAG, "onResponse: " + responseBody);
-                        callback.result(responseBody, "");
-                    } else {
-                        try {
-                            if (response.body() != null) {
-                                String errorBody = response.body().string(); // Đọc dữ liệu từ Response khi k xảy ra lỗi
-                                callback.result("", errorBody);
-                            } else {
-                                callback.result("", "error body is null " + response.code());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            callback.result("", e.getMessage());
-        }
-    }
 }

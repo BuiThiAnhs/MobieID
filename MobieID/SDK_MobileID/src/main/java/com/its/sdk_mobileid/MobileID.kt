@@ -28,7 +28,7 @@ class MobileID {
         private  const val AUTH_URL_STAGE = "https://api.smartbot.vn/stage/auth/start"
 
         private const val COVERAGE_URL_PRODUCTION = "https://api.smartbot.vn/live/coverage"
-        private const val AUTH_URL_PRODUCTION = "https://api.smartbot.vn/stage/auth/start"
+        private const val AUTH_URL_PRODUCTION = "https://api.smartbot.vn/live/auth/start"
 
 
         fun setEnv(environment: MobileIDEnv, clientID: String, redirectUri: String){
@@ -148,8 +148,10 @@ class MobileID {
                 return "Error formatting phone number"
             }
         }
-
-
+        fun getCLIENT_ID()
+        {
+            IPConfiguration.getInstance().CLIENT_ID;
+        }
     }
 
 

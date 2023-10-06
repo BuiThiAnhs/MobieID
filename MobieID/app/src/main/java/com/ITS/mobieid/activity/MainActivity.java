@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Notify_Fails.class);
         intent.putExtra("error", error);
         startActivity(intent);
-        Log.d(TAG, "openFailActivity:");
     }
 
     private void openSuccessActivity(String phonenumber) {
@@ -130,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initMobileID() {
         MobileID.Factory.setEnv(MobileIDEnv.PRODUCTION,"60e8291b368fbf97f80fd055","com.example.demo://path/" );
+
 //        IPConfiguration.getInstance().setCustomUrls(true);
 //        IPConfiguration.getInstance().setAUTHORIZATION_URL(Uri.parse("https://api.smartbot.vn/stage/auth/start"));
 //        IPConfiguration.getInstance().setCOVERAGE_URL(Uri.parse("https://api.smartbot.vn/stage/coverage"));
@@ -167,40 +167,35 @@ public class MainActivity extends AppCompatActivity {
         if (user_input_phone_number.startsWith("0")) {
             phoneNumbers = "+84" + user_input_phone_number.substring(1);
         }
-        Log.d(TAG, "startAuth:  " +phoneNumbers);
-        MobileIDCallback callback = new MobileIDCallback<MobileIDAuthResponse>() {
-            @Override
-            public void onSuccess(MobileIDAuthResponse response) {
-                Log.d(TAG, "//////onSuccess: AuthResponse" + response.getCode());
-                String phoneNumber = edit_PhoneNumber.getText().toString();
+          MobileIDCallback callback = new MobileIDCallback<MobileIDAuthResponse>() {
+              @Override
+              public void onSuccess(MobileIDAuthResponse response) {
+                  Log.d(TAG, "onSuccess:  getcode " + response.getCode().toString());
+                  callTokenExchange(response.getCode());
+              }
 
-                if (response.getCode() != null) {
-                    Log.d(TAG, "onSuccess:  getcode" + response.getCode().toString());
-                    callTokenExchange(response.getCode());
-                } else {
-                    Log.e(TAG, "startAuth - error: code is empty");
-                    openFailActivity(phoneNumber);
-                }
-            }
+              @Override
+              public void onError(@NonNull MobileIDError error) {
+                  String phoneNumber = edit_PhoneNumber.getText().toString();
+                  Log.d(TAG, "onError:  false" + error.getErrorMessage()) ;
+                  openFailActivity(phoneNumber);
+              }
 
-            @Override
-            public void onError(@NonNull MobileIDError error) {
+          };
 
-            }
-        };
 
         AuthRequest.Builder authRequestBuilder = new AuthRequest.Builder();
 //        String country_code = edit_Countries.getText().toString();
         authRequestBuilder.addQueryParam("login_hint", phoneNumbers);
         authRequestBuilder.setScope("openid ip:phone_verify");
-        MobileID.Factory.startAuthenticate(this, phoneNumbers, callback);
+        MobileID.Factory.startAuthenticate(MainActivity.this, phoneNumbers, callback);
         Log.d(TAG, "startAuths: " + phoneNumbers);
     }
 
     private void callCheckCoverage(CoverageCallback coverageCallback) {
 //        String country_code = edit_Countries.getText().toString();
         String user_input_phone_number = edit_PhoneNumber.getText().toString();
-        String phoneNumbers ="";
+        String phoneNumbers =null;
         if (user_input_phone_number.startsWith("0")) {
             phoneNumbers = "84" + user_input_phone_number.substring(1);
         }
@@ -234,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
                 String phoneNumberVerified = Util.parseUserInfoJSON(response, "phone_number_verified");
                 String phoneNumber = Util.parseUserInfoJSON(response, "login_hint");
                 Log.e(TAG, "phoneNumberVerified :" + phoneNumberVerified + "phone_number:" + phoneNumber);
-                Log.d(TAG, "callTokenExchange: "+ phoneNumber + " "+ phoneNumberVerified);
                 if (phoneNumberVerified.equals("true")) {
                     Log.d(TAG, "callTokenExchange: " + phoneNumberVerified);
                     openSuccessActivity(phoneNumber);
@@ -247,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
 //                String country_code = edit_Countries.getText().toString();
                 String phoneNumber = edit_PhoneNumber.getText().toString();
                 openFailActivity(phoneNumber);
+
+                
             }
         }));
     }
