@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@color/white"
-    android:layout_gravity="center"
-    android:paddingRight="@dimen/margin_16"
-    android:paddingLeft="@dimen/margin_16"
-    tools:context=".activity.Notify_Fails"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layout_weight="1">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/fail"
-        android:textColor="@color/fails"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        tools:ignore="SpUsage" />
-
-    <TextView
-
-        android:id="@+id/txtinput_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/notify_fail"
-        android:textSize="16dp"
-
-        android:textStyle="italic"
-        tools:ignore="SpUsage,TextSizeCheck" />
-
-    <ImageView
-        android:id="@+id/imageView3"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/cancel"
-        android:layout_marginTop="@dimen/margin_18"
-        android:layout_marginBottom="@dimen/margin_18"
-        tools:ignore="ContentDescription" />
 
-    <Button
-        android:id="@+id/btn_SMSOTP"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:backgroundTint="@color/button"
-        android:text="@string/sms_otp"
-        tools:ignore="TextContrastCheck,VisualLintButtonSize" />
-</LinearLayout>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/margin_16"
+        android:paddingRight="@dimen/margin_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.556"
+        tools:context=".activity.Notify_Fails"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-71dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fail"
+            android:textColor="@color/fails"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            tools:ignore="SpUsage" />
+
+        <TextView
+
+            android:id="@+id/txtinput_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/notify_fail"
+            android:textSize="16dp"
+
+            android:textStyle="italic"
+            tools:ignore="SpUsage,TextSizeCheck" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_18"
+            android:layout_marginBottom="@dimen/margin_18"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/cancel"
+            tools:ignore="ContentDescription" />
+
+        <Button
+            android:id="@+id/btn_SMSOTP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/button"
+            android:text="@string/sms_otp"
+            tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

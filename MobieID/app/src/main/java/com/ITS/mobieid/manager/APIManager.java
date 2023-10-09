@@ -48,9 +48,9 @@ public class APIManager {
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful( ) && response.body() != null) {
                         String accessToken = Util.parseAccessTokenFromJSON(response.body().string());
-                        Log.d(TAG, "onResponse: accessToken: "+ accessToken );
+                        Log.e(TAG, "onResponse: accessToken: "+ accessToken );
                         if (!accessToken.equals("")) {
                             doVerify(accessToken, code, callback);
 
@@ -125,14 +125,17 @@ public class APIManager {
 
         }
     }
-    public static void doPostOTP(String code, final TokenCallback callback) {
+
+
+    public static void doPostTokenSMS(String code, final TokenCallback callback) {
         try {
             String url = Constant.ACCESS_TOKEN_URL;
             RequestBody body = new FormBody.Builder()
-//                    .add("api_key", MobileID.getInstance().getCLIENT_ID())
+                    .add("api_key", "maitrongjthuaanf")
                     .build();
             OkHttpClient client = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url(url).post(body).build();
+
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
@@ -142,11 +145,13 @@ public class APIManager {
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String phoneNumber = Util.parseAccessTokenFromJSON(response.body().string());
-                        Log.e(TAG, "onResponse: phoneNumber: "+ phoneNumber );
-                        if (!phoneNumber.equals("")) {
-                            doVerify(phoneNumber,code,callback );
+                    if (response.isSuccessful( ) && response.body() != null) {
+                        String accessToken = Util.parseAccessTokenFromJSON(response.body().string());
+                        Log.e(TAG, "onResponse: accessToken: "+ accessToken );
+                        if (!accessToken.equals("")) {
+                            doSMSOTP(accessToken, code, callback);
+
+
                         } else {
                             callback.result("", response.body().string());
                         }
@@ -170,5 +175,52 @@ public class APIManager {
         }
     }
 
+
+    public static void doSMSOTP(String access_token, String code, final TokenCallback callback) {
+        try {
+            String url = Constant.USER_SMS_OTP;
+            RequestBody body = new FormBody.Builder()
+                    .add("code", code)
+                    .build();
+
+            OkHttpClient client = new OkHttpClient.Builder().build();
+            Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + access_token)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String responseBody = response.body().string(); // Đọc dữ liệu từ Response
+                        callback.result(responseBody, "");
+                        Log.d(TAG, "onResponse: " +responseBody);
+                    } else {
+                        Log.d(TAG, "onResponse: " + response.body().string());
+                        try {
+                            if (response.body() != null) {
+                                String errorBody = response.body().string(); // Đọc dữ liệu từ Response khi xảy ra lỗi
+                                callback.result("", errorBody);
+
+                            } else {
+                                callback.result("", "error body is null " + response.code());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    callback.result("", e.getMessage());
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.result("", e.getMessage());
+
+        }
+    }
 
 }
