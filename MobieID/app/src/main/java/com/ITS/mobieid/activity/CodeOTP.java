@@ -2,7 +2,6 @@ package com.ITS.mobieid.activity;
 
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,10 +10,8 @@ import android.widget.EditText;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 
-import android.Manifest;
 import com.ITS.mobieid.R;
 
 
@@ -25,10 +22,13 @@ import com.ITS.mobieid.util.Util;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.its.mobileid.MobileID;
 import com.its.mobileid.MobileIDEnv;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -46,6 +46,7 @@ public class CodeOTP extends AppCompatActivity {
         initWidget();
         initMobileID();
         initView();
+        addSMSOTP();
         new OTPReceiver().setEdit_otp(editCodeotp);
 
 
@@ -58,12 +59,11 @@ public class CodeOTP extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPermissions();
 
             }
         });
     }
-    private void createOTP()
+    private void addSMSOTP()
     {
         initPhoneNumbers();
         Random random = new Random();
@@ -90,7 +90,7 @@ public class CodeOTP extends AppCompatActivity {
     {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference otpCollection = db.collection("SMS_OTP");
-        Query query = otpCollection.whereEqualTo("code", otp);
+        Query query = otpCollection.whereEqualTo("otp", otp);
         try{
             QuerySnapshot querySnapshot = query.get().getResult();
             if (!querySnapshot.isEmpty()) {
@@ -102,33 +102,35 @@ public class CodeOTP extends AppCompatActivity {
         }
         return false;
     }
+    private void checksData() {
+        SMS_OTP smsOTP = new SMS_OTP();
+    }
+    private void readOTP()
+    {
+        final MutableLiveData<List<SMS_OTP>> mSMSOTP = new MutableLiveData<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("SMS_OTP").addSnapshotListener((value, error) -> {
+            try{
+                if (value.isEmpty()){
+                    List<SMS_OTP> sms_otps = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc: value) {
+                        SMS_OTP sms_otp = doc.toObject(SMS_OTP.class);
+                        sms_otps.add(sms_otp);
+                    }
+                    mSMSOTP.postValue(sms_otps);
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        });
+    }
     private void initMobileID()
     {
         MobileID.Factory.setEnv(MobileIDEnv.PRODUCTION,"60e8291b368fbf97f80fd055","com.example.demo://path/" );
         Log.d(TAG, "initMobileID:  started");
     }
-    private void requestPermissions() {
-        SMS_OTP smsOTP = new SMS_OTP();
-
-        {
-            createOTP();
-            String code = smsOTP.getOtpSms();
-            APIManager.doPostTokenSMS(code,((response, errorMessage) -> {
-                if(!response.equals(""))
-                {
-                    String phone = Util.parseUserInfoJSON(response, "phone");
-                    if (checkOTP(code)) {
-                        openSuccessActivity();
-                    }
-                    else {
-                        openFailActivity(data);
-                    }
-                }
-            }));
-        }
-
-    }
-
     public void initWidget()
     {
         btnConfirm = findViewById(R.id.btnConfirm);
