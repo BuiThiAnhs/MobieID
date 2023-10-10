@@ -1,31 +1,31 @@
 package com.ITS.mobieid.data;
 
 public class SMS_OTP {
-    private String PhoneNumbers;
-    private String OtpSms;
+    private String phonenumber;
+    private String otp;
 
     public SMS_OTP() {
     }
 
     public SMS_OTP(String phoneNumbers, String otpSms) {
-        PhoneNumbers = phoneNumbers;
-        OtpSms = otpSms;
+        phonenumber = phoneNumbers;
+        otp = otpSms;
     }
 
     public String getPhoneNumbers() {
-        return PhoneNumbers;
+        return phonenumber;
     }
 
     public void setPhoneNumbers(String phoneNumbers) {
-        PhoneNumbers = phoneNumbers;
+        phonenumber = phoneNumbers;
     }
 
-    public String getOtpSms() {
-        return OtpSms;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setOtpSms(String otpSms) {
-        OtpSms = otpSms;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
 }

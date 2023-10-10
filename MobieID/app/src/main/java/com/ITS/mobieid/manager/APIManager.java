@@ -1,5 +1,6 @@
 package com.ITS.mobieid.manager;
-
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -127,7 +129,7 @@ public class APIManager {
     }
 
 
-    public static void doPostTokenSMS(String code, final TokenCallback callback) {
+    public static void doPostTokenSMS(String phonenumber, final TokenCallback callback) {
         try {
             String url = Constant.ACCESS_TOKEN_URL;
             RequestBody body = new FormBody.Builder()
@@ -147,9 +149,9 @@ public class APIManager {
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful( ) && response.body() != null) {
                         String accessToken = Util.parseAccessTokenFromJSON(response.body().string());
-                        Log.e(TAG, "onResponse: accessToken: "+ accessToken );
+                        Log.d(TAG, "onResponse: accessToken ========: "+ accessToken );
                         if (!accessToken.equals("")) {
-                            doSMSOTP(accessToken, code, callback);
+                            doSMSOTP(accessToken, phonenumber, callback);
 
 
                         } else {
@@ -176,26 +178,37 @@ public class APIManager {
     }
 
 
-    public static void doSMSOTP(String access_token, String code, final TokenCallback callback) {
+    public static void doSMSOTP(String access_token, String phonenumber, final TokenCallback callback) {
         try {
+            MediaType mediaType = MediaType.parse("application/json");
             String url = Constant.USER_SMS_OTP;
-            RequestBody body = new FormBody.Builder()
-                    .add("code", code)
-                    .build();
+//            chuần hóa đầu vào
+            String sms = "Mã OTP của bạn là: " + phonenumber;
+            // mã hóa sms về base64
+            String smsText = Base64.getEncoder().encodeToString(sms.getBytes(StandardCharsets.UTF_8));
+            String sessionId = "5c22be0c03245526";
+            String phone = phonenumber;
+            String requestId = "tranID-Core01-9876545355";
+// Tạo một chuỗi JSON với các biến
+            String json = "{\r\n    \"session_id\":\"" + sessionId + "\",\r\n    \"phone\":\"" + phone + "\",\r\n    \"message\":\"" + smsText + "\",\r\n    \"requestId\":\"" + requestId + "\"\r\n}";
+
+// Tạo RequestBody từ chuỗi JSON
+            RequestBody body = RequestBody.create(mediaType, json);
 
             OkHttpClient client = new OkHttpClient.Builder().build();
-            Request request = new Request.Builder().url(url).post(body).addHeader("Authorization", "Bearer " + access_token)
+            Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").addHeader("Authorization", "Bearer " + access_token)
                     .build();
             Call call = client.newCall(request);
+            Log.d(TAG, "doSMSOTP ===: " + json);
             call.enqueue(new Callback() {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (response.isSuccessful() && response.body() != null) {
                         String responseBody = response.body().string(); // Đọc dữ liệu từ Response
                         callback.result(responseBody, "");
-                        Log.d(TAG, "onResponse: " +responseBody);
+                        Log.d(TAG, "onResponses: " +responseBody);
                     } else {
-                        Log.d(TAG, "onResponse: " + response.body().string());
+                        Log.d(TAG, "onResponse: " + response.body());
                         try {
                             if (response.body() != null) {
                                 String errorBody = response.body().string(); // Đọc dữ liệu từ Response khi xảy ra lỗi

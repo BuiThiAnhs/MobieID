@@ -1,10 +1,11 @@
 package com.ITS.mobieid.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 
 import com.ITS.mobieid.R;
@@ -24,7 +26,6 @@ import com.ITS.mobieid.manager.APIManager;
 import com.ITS.mobieid.util.Util;
 import com.ipification.mobile.sdk.android.IPConfiguration;
 import com.ipification.mobile.sdk.android.request.AuthRequest;
-import com.ipification.mobile.sdk.im.IMService;
 import com.its.mobileid.MobileID;
 import com.its.mobileid.MobileIDEnv;
 import com.its.mobileid.callback.MobileIDCallback;
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         btnVoiceOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECEIVE_SMS)!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                            Manifest.permission.RECEIVE_SMS
+
+                    }, 100);
+                }
                 openOTP(edit_PhoneNumber.getText().toString());
             }
         });
@@ -61,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
     void initWidget() {
         imageView = findViewById(R.id.imageView);
         edit_PhoneNumber = findViewById(R.id.edit_phoneNumber);
-//        edit_Countries = findViewById(R.id.edit_countries);
         btnAuthentic = findViewById(R.id.btnAuthentic);
         btnVoiceOTP = findViewById(R.id.btnVoiceOTP);
         progressBar =  findViewById(R.id.progress_circular);
@@ -69,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initView() {
-//        hideKeyboard(edit_Countries);
         btnAuthentic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,25 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-//        CountryPicker.Builder builder = new CountryPicker.Builder().with(this)
-//                .listener(new OnCountryPickerListener() {
-//                    @Override
-//                    public void onSelectCountry(Country country) {
-//                        Log.d(TAG, "country coe = " + country.getDialCode());
-//                        edit_Countries.setText(country.getDialCode());
-////                        edit_PhoneNumber.setText(country.getDialCode());
-//                    }
-//                });
-//        CountryPicker picker = builder.build();
-//        Country country = picker.getCountryFromSIM();
-//        edit_Countries.setText(country.getDialCode());
-//        edit_Countries.setShowSoftInputOnFocus(false);
-//        edit_Countries.setOnFocusChangeListener((view12, b) -> {
-//            if (b) {
-//                picker.showBottomSheet(MainActivity.this);
-//                hideKeyboard(edit_Countries);
-//            }
-//        });
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -114,21 +100,22 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Notify_Fails.class);
         intent.putExtra("error", error);
         startActivity(intent);
-        Toast.makeText(this, "Xác thực thất bại.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Xác thực thất bại.", Toast.LENGTH_SHORT).show();
     }
 
     private void openSuccessActivity(String phonenumber) {
         Intent intent = new Intent(this, Notify_Success.class);
         intent.putExtra("success", phonenumber);
         startActivity(intent);
-        Toast.makeText(this, "Xác thực thành công.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Xác thực thành công.", Toast.LENGTH_SHORT).show();
     }
     private void openOTP(String OTP) {
         Intent intent = new Intent(this, CodeOTP.class);
 
         intent.putExtra("OTP", OTP);
         startActivity(intent);
-        Toast.makeText(this, "Đang chuyển sang SMS OTP ...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Đang chuyển sang SMS OTP ...", Toast.LENGTH_SHORT).show();
+
     }
 
     private void initMobileID() {
@@ -141,11 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
         // check Coverage
         callCheckCoverage((isAvailable, operatorCode, errorMessage) -> {
-//            String country_code = edit_Countries.getText().toString();
             String phoneNumber = edit_PhoneNumber.getText().toString();
             Log.d(TAG, "callIPFlow:  check Coverage +++" + isAvailable);
             if (isAvailable) {
-                Log.d(TAG, "callIPFlow:  " + isAvailable.toString());
+                Log.d(TAG, "callIPFlow:  " + isAvailable);
                 startAuth();
 
             } else {
@@ -166,14 +152,14 @@ public class MainActivity extends AppCompatActivity {
           MobileIDCallback callback = new MobileIDCallback<MobileIDAuthResponse>() {
               @Override
               public void onSuccess(MobileIDAuthResponse response) {
-                  Log.d(TAG, "onSuccess:  getcode " + response.getCode().toString());
+                  Log.d(TAG, "onSuccess:  getcode " + response.getCode());
                   callTokenExchange(response.getCode());
               }
 
               @Override
               public void onError(@NonNull MobileIDError error) {
                   String phoneNumber = edit_PhoneNumber.getText().toString();
-                  Log.d(TAG, "onError:  false" + error.getErrorMessage().toString()) ;
+                  Log.d(TAG, "onError:  false" + error.getErrorMessage()) ;
                   openFailActivity(phoneNumber);
               }
 
@@ -181,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         AuthRequest.Builder authRequestBuilder = new AuthRequest.Builder();
-//        String country_code = edit_Countries.getText().toString();
         authRequestBuilder.addQueryParam("login_hint", phoneNumbers);
         authRequestBuilder.setScope("openid ip:phone_verify");
         MobileID.Factory.startAuthenticate(MainActivity.this, phoneNumbers, callback);
@@ -189,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callCheckCoverage(CoverageCallback coverageCallback) {
-//        String country_code = edit_Countries.getText().toString();
         String user_input_phone_number = edit_PhoneNumber.getText().toString();
         String phoneNumbers ="";
         if (user_input_phone_number.startsWith("0")) {
@@ -217,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
         });
         Log.d(TAG, "callCheckCoverage: ");
     }
-//0382854418
     private void callTokenExchange(String code) {
         APIManager.doPostToken(code, ((response, errorMessage) -> {
             if (!response.equals("")) {
@@ -225,46 +208,18 @@ public class MainActivity extends AppCompatActivity {
                 String phoneNumber = Util.parseUserInfoJSON(response, "login_hint");
                 Log.e(TAG, "phoneNumberVerified :" + phoneNumberVerified + "phone_number:" + phoneNumber);
                 if (phoneNumberVerified.equals("true")) {
-                    Log.d(TAG, "callTokenExchange: " + phoneNumberVerified);
                     openSuccessActivity(phoneNumber);
                 } else {
-//                    String country_code = edit_Countries.getText().toString();
                     String user_input_phone_number = edit_PhoneNumber.getText().toString();
                     openFailActivity(user_input_phone_number);
                 }
             } else {
-//                String country_code = edit_Countries.getText().toString();
                 String phoneNumber = edit_PhoneNumber.getText().toString();
                 openFailActivity(phoneNumber);
 
                 
             }
         }));
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IMService.Factory.onActivityResult(requestCode, resultCode, data);
-    }
-
-//    private void hideKeyboard(EditText countryCodeEditText) {
-//        InputMethodManager inputMethodManager =
-//                (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//        inputMethodManager.hideSoftInputFromWindow(countryCodeEditText.getWindowToken(), 0);
-//    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {// API 5+ solution
-            onBackPressed();
-            return true;
-        } else {
-            super.onOptionsItemSelected(item);
-        }
-        return false;
     }
 
 }

@@ -42,10 +42,10 @@ public class Notify_Fails extends AppCompatActivity {
         btn_VoiceOTP = findViewById(R.id.btn_SMSOTP);
         txt_error = findViewById(R.id.txtinput_error);
     }
-    private void openOTP(String sms) {
+    private void openOTP(String OTP) {
         //activity
         Intent intent = new Intent(this, CodeOTP.class);
-        intent.putExtra("sms", sms);
+        intent.putExtra("OTP", OTP);
         Toast.makeText(this, "Đang chuyển sang SMS OTP ...", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
@@ -54,6 +54,7 @@ public class Notify_Fails extends AppCompatActivity {
         Intent callIntent = new Intent(this, CallService.class);
         startActivity(callIntent);
     }
+
 //    @Override
 //    protected void onDestroy() {
 //        super.onDestroy();
